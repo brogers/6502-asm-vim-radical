@@ -2,15 +2,15 @@
 " has one pair of brackets to capture the significant part of the number. The
 " key 0 is a special value used for searching for a number of any base.
 let s:BASES = {
-    \ 0:  {'pattern': '\v\c0x\x+|0o=\o+|0b[01]+|\d+'},
-    \ 2:  {'pattern': '\v\c%(0b)=([01]+)',
-    \      'format': '0b%s'},
+    \ 0:  {'pattern': '\v\c\$\x+|0o=\o+|\%[01]+|\d+'},
+    \ 2:  {'pattern': '\v\c%(\%)=([01]+)',
+    \      'format': '%%%s'},
     \ 8:  {'pattern': '\v\c%(0o=)=(\o+)',
     \      'format': '0%s'},
     \ 10: {'pattern': '\v(\d+)',
     \      'format': '%s'},
-    \ 16: {'pattern': '\v\c%(0x)=(\x+)',
-    \      'format': '0x%s'}
+    \ 16: {'pattern': '\v\c%(\$)=(\x+)',
+    \      'format': '$%s'},
     \ }
 
 function! s:Error(message) abort
@@ -85,11 +85,11 @@ function! s:IntegerToString(integer, base, ...) abort
 endfunction
 
 function! s:GuessBase(numberstring) abort
-  if a:numberstring =~? '\v^0x\x+$'
+  if a:numberstring =~? '\v^\$\x+$'
     return 16
   elseif a:numberstring =~? '\v^0o=\o+$'
     return 8
-  elseif a:numberstring =~? '\v^0b[01]+$'
+  elseif a:numberstring =~? '\v^\%[01]+$'
     return 2
   elseif a:numberstring =~? '\v^\d+$'
     return 10
